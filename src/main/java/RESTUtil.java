@@ -29,12 +29,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * 代码来源
+ * https://github.com/apache/metron/blob/master/metron-analytics/metron-maas-common/src/main/java/org/apache/metron/maas/util/RESTUtil.java
+ * https://stackoverflow.com/questions/18188041/write-in-body-request-with-httpclient/18188408#18188408
+ */
 public enum RESTUtil {
     INSTANCE;
     public static final ThreadLocal<CloseableHttpClient> gCLIENT = ThreadLocal.withInitial(() -> HttpClientBuilder.create().build());
 
     private static final String CONTENT_TYPE = "application/json";
 
+    /**
+     * post 请求
+     * @param endpointUrl
+     * @param postArgs
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     public String postRESTJSONResults(URL endpointUrl, Map<String, String> postArgs) throws IOException, URISyntaxException {
         HttpPost post = new HttpPost(endpointUrl.toURI());
         post.addHeader("Content-Type", CONTENT_TYPE);
@@ -55,6 +68,14 @@ public enum RESTUtil {
         return EntityUtils.toString(response.getEntity());
     }
 
+    /**
+     * get 请求
+     * @param endpointUrl
+     * @param getArgs
+     * @return
+     * @throws IOException
+     * @throws URISyntaxException
+     */
     public String getRESTJSONResults(URL endpointUrl, Map<String, String> getArgs) throws IOException, URISyntaxException {
         String encodedParams = encodeParams(getArgs);
         HttpGet get = new HttpGet(appendToUrl(endpointUrl, encodedParams).toURI());
